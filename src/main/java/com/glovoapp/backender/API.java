@@ -1,11 +1,16 @@
 package com.glovoapp.backender;
 
+import com.glovoapp.backender.courier.CourierRepository;
+import com.glovoapp.backender.order.OrderRepository;
+import com.glovoapp.backender.order.OrderVM;
+import com.glovoapp.backender.order.OrdersFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -17,12 +22,21 @@ import java.util.stream.Collectors;
 @EnableAutoConfiguration
 class API {
     private final String welcomeMessage;
+
     private final OrderRepository orderRepository;
+    private final CourierRepository courierRepository;
+    private final OrdersFetcher ordersFetcher;
 
     @Autowired
-    API(@Value("${backender.welcome_message}") String welcomeMessage, OrderRepository orderRepository) {
+    API(
+            @Value("${backender.welcome_message}") String welcomeMessage,
+            OrderRepository orderRepository,
+            CourierRepository courierRepository,
+            OrdersFetcher ordersFetcher) {
         this.welcomeMessage = welcomeMessage;
         this.orderRepository = orderRepository;
+        this.courierRepository = courierRepository;
+        this.ordersFetcher = ordersFetcher;
     }
 
     @RequestMapping("/")
@@ -35,6 +49,15 @@ class API {
     @ResponseBody
     List<OrderVM> orders() {
         return orderRepository.findAll()
+                .stream()
+                .map(order -> new OrderVM(order.getId(), order.getDescription()))
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping("/orders/{courierId:^courier-[0-9A-Fa-f]+$}")
+    @ResponseBody
+    List<OrderVM> ordersByCourierId(@PathVariable String courierId) {
+        return ordersFetcher.fetchOrders(orderRepository, courierRepository.findById(courierId))
                 .stream()
                 .map(order -> new OrderVM(order.getId(), order.getDescription()))
                 .collect(Collectors.toList());

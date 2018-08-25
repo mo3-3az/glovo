@@ -1,4 +1,4 @@
-package com.glovoapp.backender;
+package com.glovoapp.backender.courier;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-class CourierRepository {
+public class CourierRepository {
     private static final String COURIERS_FILE = "/couriers.json";
     private static final List<Courier> couriers;
 
@@ -26,14 +26,14 @@ class CourierRepository {
         }
     }
 
-    Courier findById(String courierId) {
+    public Courier findById(String courierId) {
         return couriers.stream()
                 .filter(courier -> courierId.equals(courier.getId()))
                 .findFirst()
                 .orElse(null);
     }
 
-    List<Courier> findAll() {
+    public List<Courier> findAll() {
         return new ArrayList<>(couriers);
     }
 }

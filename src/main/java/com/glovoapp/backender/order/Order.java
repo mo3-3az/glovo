@@ -1,8 +1,10 @@
-package com.glovoapp.backender;
+package com.glovoapp.backender.order;
+
+import com.glovoapp.backender.distance.Location;
 
 import java.util.Objects;
 
-class Order {
+public class Order {
     private String id;
     private String description;
     private Boolean food;
@@ -10,56 +12,56 @@ class Order {
     private Location pickup;
     private Location delivery;
 
-    String getId() {
+    public String getId() {
         return id;
     }
 
-    Order withId(String id) {
+    public Order withId(String id) {
         this.id = id;
         return this;
     }
 
-    String getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    Order withDescription(String description) {
+    public Order withDescription(String description) {
         this.description = description;
         return this;
     }
 
-    Boolean getFood() {
+    public Boolean getFood() {
         return food;
     }
 
-    Order withFood(Boolean food) {
+    public Order withFood(Boolean food) {
         this.food = food;
         return this;
     }
 
-    Boolean getVip() {
+    public Boolean getVip() {
         return vip;
     }
 
-    Order withVip(Boolean vip) {
+    public Order withVip(Boolean vip) {
         this.vip = vip;
         return this;
     }
 
-    Location getPickup() {
+    public Location getPickup() {
         return pickup;
     }
 
-    Order withPickup(Location pickup) {
+    public Order withPickup(Location pickup) {
         this.pickup = pickup;
         return this;
     }
 
-    Location getDelivery() {
+    public Location getDelivery() {
         return delivery;
     }
 
-    Order withDelivery(Location delivery) {
+    public Order withDelivery(Location delivery) {
         this.delivery = delivery;
         return this;
     }

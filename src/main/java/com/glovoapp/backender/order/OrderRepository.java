@@ -1,4 +1,4 @@
-package com.glovoapp.backender;
+package com.glovoapp.backender.order;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-class OrderRepository {
+public class OrderRepository {
     private static final String ORDERS_FILE = "/orders.json";
     private static final List<Order> orders;
 
@@ -26,7 +26,7 @@ class OrderRepository {
         }
     }
 
-    List<Order> findAll() {
+    public List<Order> findAll() {
         return new ArrayList<>(orders);
     }
 }

@@ -1,55 +1,57 @@
-package com.glovoapp.backender;
+package com.glovoapp.backender.courier;
+
+import com.glovoapp.backender.distance.Location;
 
 import java.util.Objects;
 
-class Courier {
+public class Courier {
     private String id;
     private String name;
     private Boolean box;
     private Vehicle vehicle;
     private Location location;
 
-    String getId() {
+    public String getId() {
         return id;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    Boolean getBox() {
+    public Boolean getBox() {
         return box;
     }
 
-    Vehicle getVehicle() {
+    public Vehicle getVehicle() {
         return vehicle;
     }
 
-    Location getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    Courier withId(String id) {
+    public Courier withId(String id) {
         this.id = id;
         return this;
     }
 
-    Courier withName(String name) {
+    public Courier withName(String name) {
         this.name = name;
         return this;
     }
 
-    Courier withBox(Boolean box) {
+    public Courier withBox(Boolean box) {
         this.box = box;
         return this;
     }
 
-    Courier withVehicle(Vehicle vehicle) {
+    public Courier withVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
         return this;
     }
 
-    Courier withLocation(Location location) {
+    public Courier withLocation(Location location) {
         this.location = location;
         return this;
     }

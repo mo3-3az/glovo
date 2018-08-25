@@ -1,4 +1,4 @@
-package com.glovoapp.backender;
+package com.glovoapp.backender.distance;
 
 import static java.lang.Math.*;
 
