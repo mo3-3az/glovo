@@ -15,12 +15,28 @@ public class DistanceComparator implements Comparator<Order> {
     private Location location;
 
     public DistanceComparator(int distanceSlotInMeters, Location location) {
+        if (distanceSlotInMeters < 0) {
+            throw new IllegalArgumentException("distanceSlotInMeters is negative!");
+        }
+
+        if (location == null) {
+            throw new IllegalArgumentException("location is null!");
+        }
+
         this.distanceSlotInMeters = distanceSlotInMeters;
         this.location = location;
     }
 
     @Override
     public int compare(Order order1, Order order2) {
+        if (order1 == null || order1.getPickup() == null) {
+            throw new IllegalArgumentException("order1 is null or the pick up location is null!");
+        }
+
+        if (order2 == null || order2.getPickup() == null) {
+            throw new IllegalArgumentException("order2 is null or the pick up location is null!");
+        }
+
         final double distBetweenOrder1AndLocationInMeters = DistanceCalculator.calculateDistanceMeters(order1.getPickup(), location);
         final double distBetweenOrder2AndLocationInMeters = DistanceCalculator.calculateDistanceMeters(order2.getPickup(), location);
 
@@ -34,7 +50,6 @@ public class DistanceComparator implements Comparator<Order> {
 
         return -1;
     }
-
 
 
 }

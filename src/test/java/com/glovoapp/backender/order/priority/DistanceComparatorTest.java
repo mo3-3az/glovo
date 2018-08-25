@@ -3,6 +3,7 @@ package com.glovoapp.backender.order.priority;
 import com.glovoapp.backender.distance.Location;
 import com.glovoapp.backender.order.model.Order;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,9 +12,25 @@ import java.util.List;
 
 class DistanceComparatorTest {
 
+    private DistanceComparator distanceComparator;
+
+    @BeforeEach
+    void setUp() {
+        distanceComparator = new DistanceComparator(1000, Location.get(10.0, 1.0));
+    }
+
+    @Test
+    void sortNullOrdersBasedOnNegativeDistance() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new DistanceComparator(-10, Location.get(10.0, 1.0)));
+    }
+
+    @Test
+    void sortNullOrdersBasedOnNullLocation() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new DistanceComparator(100, null));
+    }
+
     @Test
     void sortOrdersWithinSameDistanceSlot() {
-        DistanceComparator distanceComparator = new DistanceComparator(1000, Location.get(10.0, 1.0));
         final List<Order> ordersOriginal = Arrays.asList(
                 new Order().withPickup(Location.get(10.0, 1.0)),
                 new Order().withPickup(Location.get(10.0, 1.0)),
@@ -28,7 +45,6 @@ class DistanceComparatorTest {
 
     @Test
     void sortOrdersSomeWithinSameDistanceSlotSomeFurther() {
-        DistanceComparator distanceComparator = new DistanceComparator(1000, Location.get(10.0, 1.0));
         final List<Order> ordersOriginal = Arrays.asList(
                 new Order().withPickup(Location.get(10.0, 1.0)),
                 new Order().withPickup(Location.get(110.0, 1.0)),
@@ -48,7 +64,7 @@ class DistanceComparatorTest {
     }
 
     @Test
-    void sortOrdersFarFromEachother() {
+    void sortOrdersFarFromEachOther() {
         DistanceComparator distanceComparator = new DistanceComparator(1000, Location.get(10.0, 1.0));
         final List<Order> ordersOriginal = Arrays.asList(
                 new Order().withPickup(Location.get(5000.0, 1.0)),
@@ -87,5 +103,23 @@ class DistanceComparatorTest {
 
         ordersOriginal.sort(distanceComparator);
         Assertions.assertEquals(ordersSorted, ordersOriginal);
+    }
+
+    @Test
+    void sortNullOrders() {
+        final List<Order> ordersOriginal = Arrays.asList(
+                null, new Order().withPickup(Location.get(1.4, 1.0)), null
+        );
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordersOriginal.sort(distanceComparator));
+    }
+
+    @Test
+    void sortOrdersWithNullPickIpLocations() {
+        final List<Order> ordersOriginal = Arrays.asList(
+                new Order(), new Order()
+        );
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordersOriginal.sort(distanceComparator));
     }
 }

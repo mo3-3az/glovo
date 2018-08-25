@@ -6,5 +6,5 @@ package com.glovoapp.backender.order.priority;
 public enum OrdersPriority {
     FOOD,
     VIP,
-//    DISTANCE
+    DISTANCE
 }

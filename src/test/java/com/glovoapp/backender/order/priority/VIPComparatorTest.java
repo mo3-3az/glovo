@@ -34,6 +34,36 @@ class VIPComparatorTest {
     }
 
     @Test
+    void sortOrdersWithNullVipValues() {
+        final List<Order> ordersOriginal = Arrays.asList(
+                new Order(),
+                new Order().withVip(true)
+        );
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordersOriginal.sort(vipComparator));
+    }
+
+    @Test
+    void sortOrdersWithNullValue() {
+        final List<Order> ordersOriginal = Arrays.asList(
+                null,
+                new Order()
+        );
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordersOriginal.sort(vipComparator));
+    }
+
+    @Test
+    void sortOrdersWithNullValues() {
+        final List<Order> ordersOriginal = Arrays.asList(
+                null,
+                null
+        );
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> ordersOriginal.sort(vipComparator));
+    }
+
+    @Test
     void sortOrdersAllVIPDoesNotChangeOrder() {
         final List<Order> ordersOriginal = Arrays.asList(
                 new Order().withVip(true).withId("1"),

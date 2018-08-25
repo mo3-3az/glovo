@@ -12,7 +12,15 @@ public abstract class BooleanComparator implements Comparator<Order> {
     @Override
     public abstract int compare(Order order1, Order order2);
 
-    protected int compareBooleans(Boolean boolean1, Boolean boolean2) {
+    int compareBooleans(Boolean boolean1, Boolean boolean2) {
+        if (boolean1 == null) {
+            throw new IllegalArgumentException("Boolean1 is null!");
+        }
+
+        if (boolean2 == null) {
+            throw new IllegalArgumentException("Boolean2 is null!");
+        }
+
         if (boolean1 == boolean2) {
             return 0;
         } else if (boolean2) {

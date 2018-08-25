@@ -26,9 +26,9 @@ public class OrderComparator implements Comparator<Order> {
                     comparators.add(new VIPComparator());
                     break;
 
-//                case DISTANCE:
-//                    comparators.add(new DistanceComparator(distanceSlotInMeters, location));
-//                    break;
+                case DISTANCE:
+                    comparators.add(new DistanceComparator(distanceSlotInMeters, location));
+                    break;
             }
         });
     }
