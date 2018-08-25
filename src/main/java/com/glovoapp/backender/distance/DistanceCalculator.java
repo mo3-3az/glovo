@@ -12,7 +12,7 @@ public class DistanceCalculator {
     /**
      * Returns distance between two locations in kilometers
      */
-    public static double calculateDistance(Location start, Location end) {
+    public static double calculateDistanceKilometers(Location start, Location end) {
         double deltaLat = toRadians((end.getLat() - start.getLat()));
         double deltaLong = toRadians((end.getLon() - start.getLon()));
 
@@ -25,7 +25,12 @@ public class DistanceCalculator {
         return EARTH_RADIUS * c;
     }
 
+    public static double calculateDistanceMeters(Location start, Location end) {
+        return calculateDistanceKilometers(start, end) * 1000;
+    }
+
     private static double haversin(double val) {
         return Math.pow(Math.sin(val / 2), 2);
     }
+
 }

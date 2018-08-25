@@ -1,4 +1,4 @@
-package com.glovoapp.backender.order;
+package com.glovoapp.backender.order.priority;
 
 /**
  * @author Moath
@@ -6,5 +6,5 @@ package com.glovoapp.backender.order;
 public enum OrdersPriority {
     FOOD,
     VIP,
-    DISTANCE
+//    DISTANCE
 }

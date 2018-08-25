@@ -83,4 +83,8 @@ public class Courier {
                 ", location=" + location +
                 '}';
     }
+
+    public boolean canDeliverFood(){
+        return getBox();
+    }
 }

@@ -11,11 +11,11 @@ public class Location {
         this.lon = lon;
     }
 
-    public Double getLat() {
+    Double getLat() {
         return lat;
     }
 
-    public Double getLon() {
+    Double getLon() {
         return lon;
     }
 
@@ -39,5 +39,9 @@ public class Location {
                 "lat=" + lat +
                 ", lon=" + lon +
                 '}';
+    }
+
+    public static Location get(Double lat, Double lon) {
+        return new Location(lat, lon);
     }
 }

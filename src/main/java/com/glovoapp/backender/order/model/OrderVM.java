@@ -1,4 +1,4 @@
-package com.glovoapp.backender.order;
+package com.glovoapp.backender.order.model;
 
 /**
  * To be used for exposing order information through the API

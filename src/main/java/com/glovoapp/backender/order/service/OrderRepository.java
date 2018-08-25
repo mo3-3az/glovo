@@ -1,5 +1,6 @@
-package com.glovoapp.backender.order;
+package com.glovoapp.backender.order.service;
 
+import com.glovoapp.backender.order.model.Order;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Component;

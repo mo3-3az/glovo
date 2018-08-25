@@ -1,4 +1,4 @@
-package com.glovoapp.backender.order;
+package com.glovoapp.backender.order.model;
 
 import com.glovoapp.backender.distance.Location;
 

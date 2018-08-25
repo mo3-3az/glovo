@@ -2,6 +2,8 @@ package com.glovoapp.backender.order;
 
 
 import com.glovoapp.backender.distance.Location;
+import com.glovoapp.backender.order.model.Order;
+import com.glovoapp.backender.order.service.OrderRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

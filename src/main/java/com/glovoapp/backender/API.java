@@ -1,9 +1,9 @@
 package com.glovoapp.backender;
 
 import com.glovoapp.backender.courier.CourierRepository;
-import com.glovoapp.backender.order.OrderRepository;
-import com.glovoapp.backender.order.OrderVM;
-import com.glovoapp.backender.order.OrdersFetcher;
+import com.glovoapp.backender.order.model.OrderVM;
+import com.glovoapp.backender.order.service.OrderRepository;
+import com.glovoapp.backender.order.service.OrdersFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
