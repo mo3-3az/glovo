@@ -14,14 +14,16 @@ import java.util.List;
 public class OrdersFetcherService implements OrdersFetcher {
 
     private final OrdersFetcherProperties properties;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public OrdersFetcherService(OrdersFetcherProperties properties) {
+    public OrdersFetcherService(OrdersFetcherProperties properties, OrderRepository orderRepository) {
         this.properties = properties;
+        this.orderRepository = orderRepository;
     }
 
     @Override
-    public List<Order> fetchOrders(OrderRepository orderRepository, Courier courier) {
+    public List<Order> fetchOrders(Courier courier) {
         return Collections.emptyList();
     }
 }

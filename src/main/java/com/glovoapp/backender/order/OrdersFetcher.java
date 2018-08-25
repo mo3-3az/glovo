@@ -9,6 +9,6 @@ import java.util.List;
  */
 public interface OrdersFetcher {
 
-    List<Order> fetchOrders(OrderRepository orderRepository, Courier courier);
+    List<Order> fetchOrders(Courier courier);
 
 }

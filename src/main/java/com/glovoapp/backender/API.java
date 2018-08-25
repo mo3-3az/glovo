@@ -57,7 +57,7 @@ class API {
     @RequestMapping("/orders/{courierId:^courier-[0-9A-Fa-f]+$}")
     @ResponseBody
     List<OrderVM> ordersByCourierId(@PathVariable String courierId) {
-        return ordersFetcher.fetchOrders(orderRepository, courierRepository.findById(courierId))
+        return ordersFetcher.fetchOrders(courierRepository.findById(courierId))
                 .stream()
                 .map(order -> new OrderVM(order.getId(), order.getDescription()))
                 .collect(Collectors.toList());
