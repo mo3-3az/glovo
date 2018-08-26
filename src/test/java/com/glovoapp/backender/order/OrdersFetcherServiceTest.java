@@ -25,6 +25,14 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 class OrdersFetcherServiceTest {
 
+    private static final double LAT = 41.39998523694263;
+    private static final double LON = 2.172663432928287;
+    private static final double LAT_CLOSE = 41.39998523695000;
+    private static final double LAT_FAR = 51.39998523694263;
+    private static final String ORDER_DESC_NOT_FOOD = "Not food";
+    private static final String ORDER_DESC_PIZZA = "Pizza";
+    public static final int LONG_DISTANCE_IN_KILOMETERS = 5;
+
     @Mock
     private OrderRepository orderRepository;
 
@@ -43,53 +51,42 @@ class OrdersFetcherServiceTest {
         Mockito.when(ordersFetcherProperties.getFoodKeywords()).thenReturn(Arrays.asList(FoodKeyword.values()));
         Mockito.when(ordersFetcherProperties.getOrdersPriorities()).thenReturn(Arrays.asList(OrdersPriority.values()));
         Mockito.when(ordersFetcherProperties.getLongDistanceVehicles()).thenReturn(Arrays.asList(Vehicle.MOTORCYCLE, Vehicle.ELECTRIC_SCOOTER));
-
-        ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
     }
 
     @Test
     void fetchOrdersForCourier_CloseToOrder_WithABox_AndShortDistanceVehicle() {
-        final Location courierLocation = new Location(41.39998523694263, 2.172663432928287);
-        final Location orderLocation = new Location(41.39998523695000, 2.172663432928287);
+        final Location courierLocation = new Location(LAT, LON);
+        final Location orderLocation = new Location(LAT_CLOSE, LON);
         courier
                 .withBox(true)
                 .withVehicle(Vehicle.BICYCLE)
                 .withLocation(courierLocation);
 
-        final List<Order> mockList = Arrays.asList(
-                new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription("Pizza"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("Not food"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("Not food")
-        );
+        final List<Order> mockList = getMockOrdersList(orderLocation);
         Mockito.when(orderRepository.findAll()).thenReturn(mockList);
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
-        Mockito.when(ordersFetcherProperties.getLongDistanceInKilometers()).thenReturn(5);
+        Mockito.when(ordersFetcherProperties.getLongDistanceInKilometers()).thenReturn(LONG_DISTANCE_IN_KILOMETERS);
         final List<Order> orders = ordersFetcherService.fetchOrders(courier);
         final List<Order> expectedList = Arrays.asList(
-                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("Not food"),
-                new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription("Pizza"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("Not food")
+                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription(ORDER_DESC_NOT_FOOD),
+                new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription(ORDER_DESC_PIZZA),
+                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription(ORDER_DESC_NOT_FOOD)
         );
         Assertions.assertEquals(expectedList, orders);
     }
 
-
     @Test
     void fetchOrdersForCourier_FarFromOrder_WithABox_AndShortDistanceVehicle() {
-        final Location courierLocation = new Location(41.39998523694263, 2.172663432928287);
-        final Location orderLocation = new Location(51.39998523694263, 2.172663432928287);
+        final Location courierLocation = new Location(LAT, LON);
+        final Location orderLocation = new Location(LAT_FAR, LON);
         courier
                 .withBox(true)
                 .withVehicle(Vehicle.BICYCLE)
                 .withLocation(courierLocation);
 
-        final List<Order> mockList = Arrays.asList(
-                new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription("Pizza"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("Not food"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("Not food")
-        );
-        Mockito.when(ordersFetcherProperties.getLongDistanceInKilometers()).thenReturn(5);
+        final List<Order> mockList = getMockOrdersList(orderLocation);
+        Mockito.when(ordersFetcherProperties.getLongDistanceInKilometers()).thenReturn(LONG_DISTANCE_IN_KILOMETERS);
         Mockito.when(orderRepository.findAll()).thenReturn(mockList);
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
@@ -101,70 +98,58 @@ class OrdersFetcherServiceTest {
 
     @Test
     void fetchOrdersForCourier_FarFromOrder_WithABox_AndLongDistanceVehicle() {
-        final Location courierLocation = new Location(41.39998523694263, 2.172663432928287);
-        final Location orderLocation = new Location(51.39998523694263, 2.172663432928287);
+        final Location courierLocation = new Location(LAT, LON);
+        final Location orderLocation = new Location(LAT_FAR, LON);
         courier
                 .withBox(true)
                 .withVehicle(Vehicle.MOTORCYCLE)
                 .withLocation(courierLocation);
 
-        final List<Order> mockList = Arrays.asList(
-                new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription("1.Pizza"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("2.Not food"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("3.Not food")
-        );
+        final List<Order> mockList = getMockOrdersList(orderLocation);
         Mockito.when(orderRepository.findAll()).thenReturn(mockList);
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
         final List<Order> orders = ordersFetcherService.fetchOrders(courier);
         final List<Order> expectedList = Arrays.asList(
-                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("3.Not food"),
-                new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription("1.Pizza"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("2.Not food")
+                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription(ORDER_DESC_NOT_FOOD),
+                new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription(ORDER_DESC_PIZZA),
+                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription(ORDER_DESC_NOT_FOOD)
         );
         Assertions.assertEquals(expectedList, orders);
     }
 
     @Test
     void fetchOrdersForCourier_CloseToOrder_WithoutABox_AndShortDistanceVehicle() {
-        final Location courierLocation = new Location(41.39998523694263, 2.172663432928287);
-        final Location orderLocation = new Location(41.39998523694263, 2.172663432928287);
+        final Location courierLocation = new Location(LAT, LON);
+        final Location orderLocation = new Location(LAT, LON);
         courier
                 .withBox(false)
                 .withVehicle(Vehicle.BICYCLE)
                 .withLocation(courierLocation);
 
-        final List<Order> mockList = Arrays.asList(
-                new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription("1.Pizza"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("2.Not food"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("3.Not food")
-        );
+        final List<Order> mockList = getMockOrdersList(orderLocation);
         Mockito.when(orderRepository.findAll()).thenReturn(mockList);
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
         final List<Order> orders = ordersFetcherService.fetchOrders(courier);
         final List<Order> expectedList = Arrays.asList(
-                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("3.Not food"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("2.Not food")
+                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription(ORDER_DESC_NOT_FOOD),
+                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription(ORDER_DESC_NOT_FOOD)
         );
         Assertions.assertEquals(expectedList, orders);
     }
 
     @Test
     void fetchOrdersForCourier_FarFromOrder_WithoutABox_AndShortDistanceVehicle() {
-        final Location courierLocation = new Location(41.39998523694263, 2.172663432928287);
-        final Location orderLocation = new Location(51.39998523694263, 2.172663432928287);
+        final Location courierLocation = new Location(LAT, LON);
+        final Location orderLocation = new Location(LAT_FAR, LON);
         courier
                 .withBox(false)
                 .withVehicle(Vehicle.BICYCLE)
                 .withLocation(courierLocation);
 
-        final List<Order> mockList = Arrays.asList(
-                new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription("1.Pizza"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("2.Not food"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("3.Not food")
-        );
-        Mockito.when(ordersFetcherProperties.getLongDistanceInKilometers()).thenReturn(5);
+        final List<Order> mockList = getMockOrdersList(orderLocation);
+        Mockito.when(ordersFetcherProperties.getLongDistanceInKilometers()).thenReturn(LONG_DISTANCE_IN_KILOMETERS);
         Mockito.when(orderRepository.findAll()).thenReturn(mockList);
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
@@ -175,27 +160,29 @@ class OrdersFetcherServiceTest {
 
     @Test
     void fetchOrdersForCourier_FarFromOrder_WithoutABox_AndLongDistanceVehicle() {
-        final Location courierLocation = new Location(41.39998523694263, 2.172663432928287);
-        final Location orderLocation = new Location(51.39998523694263, 2.172663432928287);
+        final Location courierLocation = new Location(LAT, LON);
+        final Location orderLocation = new Location(LAT_FAR, LON);
         courier
                 .withBox(false)
                 .withVehicle(Vehicle.MOTORCYCLE)
                 .withLocation(courierLocation);
 
-        final List<Order> mockList = Arrays.asList(
-                new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription("1.Pizza"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("2.Not food"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("3.Not food")
-        );
-        Mockito.when(orderRepository.findAll()).thenReturn(mockList);
+        Mockito.when(orderRepository.findAll()).thenReturn(getMockOrdersList(orderLocation));
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
         final List<Order> orders = ordersFetcherService.fetchOrders(courier);
         final List<Order> expectedList = Arrays.asList(
-                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("3.Not food"),
-                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("2.Not food")
+                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription(ORDER_DESC_NOT_FOOD),
+                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription(ORDER_DESC_NOT_FOOD)
         );
         Assertions.assertEquals(expectedList, orders);
     }
 
+    private List<Order> getMockOrdersList(Location orderLocation) {
+        return Arrays.asList(
+                new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription(ORDER_DESC_PIZZA),
+                new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription(ORDER_DESC_NOT_FOOD),
+                new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription(ORDER_DESC_NOT_FOOD)
+        );
+    }
 }

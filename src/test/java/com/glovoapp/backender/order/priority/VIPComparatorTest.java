@@ -66,19 +66,19 @@ class VIPComparatorTest {
     @Test
     void sortOrdersAllVIPDoesNotChangeOrder() {
         final List<Order> ordersOriginal = Arrays.asList(
-                new Order().withVip(true).withId("1"),
-                new Order().withVip(true).withId("2"),
-                new Order().withVip(true).withId("3"),
-                new Order().withVip(true).withId("4"),
-                new Order().withVip(true).withId("5")
+                new Order().withVip(true),
+                new Order().withVip(true),
+                new Order().withVip(true),
+                new Order().withVip(true),
+                new Order().withVip(true)
         );
 
         final List<Order> ordersSorted = Arrays.asList(
-                new Order().withVip(true).withId("1"),
-                new Order().withVip(true).withId("2"),
-                new Order().withVip(true).withId("3"),
-                new Order().withVip(true).withId("4"),
-                new Order().withVip(true).withId("5")
+                new Order().withVip(true),
+                new Order().withVip(true),
+                new Order().withVip(true),
+                new Order().withVip(true),
+                new Order().withVip(true)
         );
 
         ordersOriginal.sort(vipComparator);

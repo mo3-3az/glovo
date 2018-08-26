@@ -56,19 +56,19 @@ class FoodComparatorTest {
     @Test
     void sortOrdersAllFoodDoesNotChangeOrder() {
         final List<Order> ordersOriginal = Arrays.asList(
-                new Order().withFood(true).withId("1"),
-                new Order().withFood(true).withId("2"),
-                new Order().withFood(true).withId("3"),
-                new Order().withFood(true).withId("4"),
-                new Order().withFood(true).withId("5")
+                new Order().withFood(true),
+                new Order().withFood(true),
+                new Order().withFood(true),
+                new Order().withFood(true),
+                new Order().withFood(true)
         );
 
         final List<Order> ordersSorted = Arrays.asList(
-                new Order().withFood(true).withId("1"),
-                new Order().withFood(true).withId("2"),
-                new Order().withFood(true).withId("3"),
-                new Order().withFood(true).withId("4"),
-                new Order().withFood(true).withId("5")
+                new Order().withFood(true),
+                new Order().withFood(true),
+                new Order().withFood(true),
+                new Order().withFood(true),
+                new Order().withFood(true)
         );
 
         ordersOriginal.sort(foodComparator);
