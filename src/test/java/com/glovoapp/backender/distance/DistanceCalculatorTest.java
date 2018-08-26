@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class DistanceCalculatorTest {
 
     @Test
-    public void smokeTest() {
+    void smokeTest() {
         Location francescMacia = new Location(41.3925603, 2.1418532);
         Location placaCatalunya = new Location(41.3870194, 2.1678584);
 
@@ -16,7 +16,7 @@ class DistanceCalculatorTest {
     }
 
     @Test
-    public void distanceInMeters() {
+    void distanceInMeters() {
         Location francescMacia = new Location(41.3925603, 2.1418532);
         Location placaCatalunya = new Location(41.3870194, 2.1678584);
 

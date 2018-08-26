@@ -3,6 +3,8 @@ package com.glovoapp.backender.order.priority;
 import com.glovoapp.backender.order.model.Order;
 
 /**
+ * This will compare two orders together, the order which has VIP as true will be before the one that doesn't.
+ *
  * @author Moath
  */
 public class VIPComparator extends BooleanComparator {

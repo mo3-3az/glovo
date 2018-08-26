@@ -7,6 +7,11 @@ import com.glovoapp.backender.order.model.Order;
 import java.util.Comparator;
 
 /**
+ * This will compare two orders together, the order which is located distanceSlotInMeters meters within a specific location
+ * will be before the other.
+ * <p>
+ * If both are the same or within the slot they will be regarded as equals.
+ *
  * @author Moath
  */
 public class DistanceComparator implements Comparator<Order> {

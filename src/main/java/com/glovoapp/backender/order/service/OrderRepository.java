@@ -25,7 +25,7 @@ public class OrderRepository {
         return new ArrayList<>(orders);
     }
 
-    public static List<Order> getOrdersFromFile(String ordersFile) {
+    private static List<Order> getOrdersFromFile(String ordersFile) {
         try (Reader reader = new InputStreamReader(OrderRepository.class.getResourceAsStream(ordersFile))) {
             Type type = new TypeToken<List<Order>>() {
             }.getType();

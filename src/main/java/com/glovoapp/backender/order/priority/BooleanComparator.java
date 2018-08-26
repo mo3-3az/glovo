@@ -5,6 +5,8 @@ import com.glovoapp.backender.order.model.Order;
 import java.util.Comparator;
 
 /**
+ * This comparator favors a true boolean over a false boolean.
+ *
  * @author Moath
  */
 public abstract class BooleanComparator implements Comparator<Order> {

@@ -4,7 +4,7 @@ import com.glovoapp.backender.courier.Courier;
 import com.glovoapp.backender.courier.Vehicle;
 import com.glovoapp.backender.distance.Location;
 import com.glovoapp.backender.order.config.OrdersFetcherProperties;
-import com.glovoapp.backender.order.model.FoodOrder;
+import com.glovoapp.backender.order.model.FoodKeyword;
 import com.glovoapp.backender.order.model.Order;
 import com.glovoapp.backender.order.priority.OrdersPriority;
 import com.glovoapp.backender.order.service.OrderRepository;
@@ -40,7 +40,7 @@ class OrdersFetcherServiceTest {
         courier = new Courier();
 
         Mockito.when(ordersFetcherProperties.getDistanceSlotInMeters()).thenReturn(500);
-        Mockito.when(ordersFetcherProperties.getFoodOrders()).thenReturn(Arrays.asList(FoodOrder.values()));
+        Mockito.when(ordersFetcherProperties.getFoodKeywords()).thenReturn(Arrays.asList(FoodKeyword.values()));
         Mockito.when(ordersFetcherProperties.getOrdersPriorities()).thenReturn(Arrays.asList(OrdersPriority.values()));
         Mockito.when(ordersFetcherProperties.getLongDistanceVehicles()).thenReturn(Arrays.asList(Vehicle.MOTORCYCLE, Vehicle.ELECTRIC_SCOOTER));
 
@@ -65,13 +65,13 @@ class OrdersFetcherServiceTest {
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
         Mockito.when(ordersFetcherProperties.getLongDistanceInKilometers()).thenReturn(5);
-        final List<Order> foodOrders = ordersFetcherService.fetchOrders(courier);
+        final List<Order> orders = ordersFetcherService.fetchOrders(courier);
         final List<Order> expectedList = Arrays.asList(
                 new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("Not food"),
                 new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription("Pizza"),
                 new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("Not food")
         );
-        Assertions.assertEquals(expectedList, foodOrders);
+        Assertions.assertEquals(expectedList, orders);
     }
 
 
@@ -94,9 +94,9 @@ class OrdersFetcherServiceTest {
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
 
-        final List<Order> foodOrders = ordersFetcherService.fetchOrders(courier);
+        final List<Order> orders = ordersFetcherService.fetchOrders(courier);
         final List<Order> expectedList = Collections.emptyList();
-        Assertions.assertEquals(expectedList, foodOrders);
+        Assertions.assertEquals(expectedList, orders);
     }
 
     @Test
@@ -116,13 +116,13 @@ class OrdersFetcherServiceTest {
         Mockito.when(orderRepository.findAll()).thenReturn(mockList);
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
-        final List<Order> foodOrders = ordersFetcherService.fetchOrders(courier);
+        final List<Order> orders = ordersFetcherService.fetchOrders(courier);
         final List<Order> expectedList = Arrays.asList(
                 new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("3.Not food"),
                 new Order().withPickup(orderLocation).withFood(true).withVip(false).withDescription("1.Pizza"),
                 new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("2.Not food")
         );
-        Assertions.assertEquals(expectedList, foodOrders);
+        Assertions.assertEquals(expectedList, orders);
     }
 
     @Test
@@ -142,12 +142,12 @@ class OrdersFetcherServiceTest {
         Mockito.when(orderRepository.findAll()).thenReturn(mockList);
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
-        final List<Order> foodOrders = ordersFetcherService.fetchOrders(courier);
+        final List<Order> orders = ordersFetcherService.fetchOrders(courier);
         final List<Order> expectedList = Arrays.asList(
                 new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("3.Not food"),
                 new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("2.Not food")
         );
-        Assertions.assertEquals(expectedList, foodOrders);
+        Assertions.assertEquals(expectedList, orders);
     }
 
     @Test
@@ -168,9 +168,9 @@ class OrdersFetcherServiceTest {
         Mockito.when(orderRepository.findAll()).thenReturn(mockList);
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
-        final List<Order> foodOrders = ordersFetcherService.fetchOrders(courier);
+        final List<Order> orders = ordersFetcherService.fetchOrders(courier);
         final List<Order> expectedList = Collections.emptyList();
-        Assertions.assertEquals(expectedList, foodOrders);
+        Assertions.assertEquals(expectedList, orders);
     }
 
     @Test
@@ -190,12 +190,12 @@ class OrdersFetcherServiceTest {
         Mockito.when(orderRepository.findAll()).thenReturn(mockList);
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
-        final List<Order> foodOrders = ordersFetcherService.fetchOrders(courier);
+        final List<Order> orders = ordersFetcherService.fetchOrders(courier);
         final List<Order> expectedList = Arrays.asList(
                 new Order().withPickup(orderLocation).withFood(false).withVip(true).withDescription("3.Not food"),
                 new Order().withPickup(orderLocation).withFood(false).withVip(false).withDescription("2.Not food")
         );
-        Assertions.assertEquals(expectedList, foodOrders);
+        Assertions.assertEquals(expectedList, orders);
     }
 
 }

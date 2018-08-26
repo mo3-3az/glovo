@@ -1,7 +1,7 @@
 package com.glovoapp.backender.order.config;
 
 import com.glovoapp.backender.courier.Vehicle;
-import com.glovoapp.backender.order.model.FoodOrder;
+import com.glovoapp.backender.order.model.FoodKeyword;
 import com.glovoapp.backender.order.priority.OrdersPriority;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -9,13 +9,16 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 /**
+ * Configuration properties that will be used to change the behavior of the OrdersFetcher.
+ *
  * @author Moath
+ * @see "application.properties"
  */
 @Configuration
 @ConfigurationProperties("orders-fetcher")
 public class OrdersFetcherProperties {
 
-    private List<FoodOrder> foodOrders;
+    private List<FoodKeyword> foodKeywords;
 
     private List<Vehicle> longDistanceVehicles;
 
@@ -25,8 +28,8 @@ public class OrdersFetcherProperties {
 
     private List<OrdersPriority> ordersPriorities;
 
-    public void setFoodOrders(List<FoodOrder> foodOrders) {
-        this.foodOrders = foodOrders;
+    public void setFoodKeywords(List<FoodKeyword> foodKeywords) {
+        this.foodKeywords = foodKeywords;
     }
 
     public void setLongDistanceVehicles(List<Vehicle> longDistanceVehicles) {
@@ -45,8 +48,8 @@ public class OrdersFetcherProperties {
         this.ordersPriorities = ordersPriorities;
     }
 
-    public List<FoodOrder> getFoodOrders() {
-        return foodOrders;
+    public List<FoodKeyword> getFoodKeywords() {
+        return foodKeywords;
     }
 
     public List<Vehicle> getLongDistanceVehicles() {
