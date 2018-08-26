@@ -8,6 +8,7 @@ import java.util.List;
 public enum FoodOrder {
     PIZZA,
     CAKE,
+    KEBAB,
     FLAMINGO;
 
     public static boolean isFoodOrder(String orderDescription, List<FoodOrder> foodOrders) {

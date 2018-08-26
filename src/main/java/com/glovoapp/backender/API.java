@@ -1,5 +1,6 @@
 package com.glovoapp.backender;
 
+import com.glovoapp.backender.courier.Courier;
 import com.glovoapp.backender.courier.CourierRepository;
 import com.glovoapp.backender.order.model.OrderVM;
 import com.glovoapp.backender.order.service.OrderRepository;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,7 +59,12 @@ class API {
     @RequestMapping("/orders/{courierId:^courier-[0-9A-Fa-f]+$}")
     @ResponseBody
     List<OrderVM> ordersByCourierId(@PathVariable String courierId) {
-        return ordersFetcher.fetchOrders(courierRepository.findById(courierId))
+        final Courier courier = courierRepository.findById(courierId);
+        if (courier == null) {
+            return Collections.emptyList();
+        }
+
+        return ordersFetcher.fetchOrders(courier)
                 .stream()
                 .map(order -> new OrderVM(order.getId(), order.getDescription()))
                 .collect(Collectors.toList());

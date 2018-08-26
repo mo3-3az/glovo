@@ -18,16 +18,20 @@ public class OrderRepository {
     private static final List<Order> orders;
 
     static {
-        try (Reader reader = new InputStreamReader(OrderRepository.class.getResourceAsStream(ORDERS_FILE))) {
-            Type type = new TypeToken<List<Order>>() {
-            }.getType();
-            orders = new Gson().fromJson(reader, type);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        orders = getOrdersFromFile(ORDERS_FILE);
     }
 
     public List<Order> findAll() {
         return new ArrayList<>(orders);
+    }
+
+    public static List<Order> getOrdersFromFile(String ordersFile) {
+        try (Reader reader = new InputStreamReader(OrderRepository.class.getResourceAsStream(ordersFile))) {
+            Type type = new TypeToken<List<Order>>() {
+            }.getType();
+            return new Gson().fromJson(reader, type);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

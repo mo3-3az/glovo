@@ -47,30 +47,28 @@ public class OrdersFetcherService implements OrdersFetcher {
 
     @Override
     public List<Order> fetchOrders(Courier courier) {
-        List<Order> orders;
+        List<Order> orders = noneFoodOrders
+                .stream()
+                .filter(order -> canCourierPickUp(courier, order.getPickup()))
+                .collect(Collectors.toList());
+
         if (courier.canDeliverFood()) {
-            orders = foodOrders
+            orders.addAll(foodOrders
                     .stream()
                     .filter(order -> canCourierPickUp(courier, order.getPickup()))
-                    .collect(Collectors.toList());
-        } else {
-            orders = noneFoodOrders
-                    .stream()
-                    .filter(order -> canCourierPickUp(courier, order.getPickup()))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()));
         }
 
-        //Sort based on distance slots
         orders.sort(new OrderComparator(properties.getOrdersPriorities(), properties.getDistanceSlotInMeters(), courier.getLocation()));
         return orders;
     }
 
     private boolean canCourierPickUp(Courier courier, Location pickupLocation) {
-        if (DistanceCalculator.calculateDistanceKilometers(pickupLocation, courier.getLocation()) <= properties.getLongDistanceInKilometers()) {
+        if (properties.getLongDistanceVehicles().contains(courier.getVehicle())) {
             return true;
         }
 
-        return properties.getLongDistanceVehicles().contains(courier.getVehicle());
+        return DistanceCalculator.calculateDistanceKilometers(pickupLocation, courier.getLocation()) <= properties.getLongDistanceInKilometers();
     }
 
 }

@@ -40,6 +40,10 @@ public class DistanceComparator implements Comparator<Order> {
         final double distBetweenOrder1AndLocationInMeters = DistanceCalculator.calculateDistanceMeters(order1.getPickup(), location);
         final double distBetweenOrder2AndLocationInMeters = DistanceCalculator.calculateDistanceMeters(order2.getPickup(), location);
 
+        if (distBetweenOrder1AndLocationInMeters == distBetweenOrder2AndLocationInMeters) {
+            return 0;
+        }
+
         if (distBetweenOrder1AndLocationInMeters <= distanceSlotInMeters && distBetweenOrder2AndLocationInMeters <= distanceSlotInMeters) {
             return 0;
         }
