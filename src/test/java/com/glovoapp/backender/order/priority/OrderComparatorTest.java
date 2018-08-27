@@ -3,7 +3,6 @@ package com.glovoapp.backender.order.priority;
 import com.glovoapp.backender.distance.Location;
 import com.glovoapp.backender.order.model.Order;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -13,16 +12,11 @@ class OrderComparatorTest {
 
     private OrdersPriorityStrategy ordersPriorityStrategy;
 
-    @BeforeEach
-    void setUp() {
-        ordersPriorityStrategy = new OrdersPriorityStrategy();
-        ordersPriorityStrategy.setDistanceSlotInMeters(1000);
-        ordersPriorityStrategy.setLocation(Location.get(41.1, 1.0));
-    }
 
     @Test
     void sortOrdersPrioritizedByDistanceVIPFood() {
-        ordersPriorityStrategy.setOrdersPriorities(Arrays.asList(OrdersPriority.DISTANCE, OrdersPriority.VIP, OrdersPriority.FOOD));
+        ordersPriorityStrategy = new OrdersPriorityStrategy(Arrays.asList(OrdersPriority.DISTANCE, OrdersPriority.VIP, OrdersPriority.FOOD), 1000);
+        ordersPriorityStrategy.setLocation(Location.get(41.1, 1.0));
         OrdersComparator orderComparator = new OrdersComparator(ordersPriorityStrategy.getComparators());
 
         final List<Order> ordersOriginal = Arrays.asList(
@@ -45,7 +39,8 @@ class OrderComparatorTest {
 
     @Test
     void sortOrdersPrioritizedByFoodDistanceVIP() {
-        ordersPriorityStrategy.setOrdersPriorities(Arrays.asList(OrdersPriority.FOOD, OrdersPriority.DISTANCE, OrdersPriority.VIP));
+        ordersPriorityStrategy = new OrdersPriorityStrategy(Arrays.asList(OrdersPriority.FOOD, OrdersPriority.DISTANCE, OrdersPriority.VIP), 1000);
+        ordersPriorityStrategy.setLocation(Location.get(41.1, 1.0));
         OrdersComparator orderComparator = new OrdersComparator(ordersPriorityStrategy.getComparators());
 
         final List<Order> ordersOriginal = Arrays.asList(
@@ -68,7 +63,8 @@ class OrderComparatorTest {
 
     @Test
     void sortOrdersPrioritizedByVIPFoodDistance() {
-        ordersPriorityStrategy.setOrdersPriorities(Arrays.asList(OrdersPriority.VIP, OrdersPriority.FOOD, OrdersPriority.DISTANCE));
+        ordersPriorityStrategy = new OrdersPriorityStrategy(Arrays.asList(OrdersPriority.VIP, OrdersPriority.FOOD, OrdersPriority.DISTANCE), 1000);
+        ordersPriorityStrategy.setLocation(Location.get(41.1, 1.0));
         OrdersComparator orderComparator = new OrdersComparator(ordersPriorityStrategy.getComparators());
 
         final List<Order> ordersOriginal = Arrays.asList(

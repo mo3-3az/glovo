@@ -11,6 +11,7 @@ import com.glovoapp.backender.order.service.OrderRepository;
 import com.glovoapp.backender.order.service.OrdersFetcherService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -31,7 +32,7 @@ class OrdersFetcherServiceTest {
     private static final double LAT_FAR = 51.39998523694263;
     private static final String ORDER_DESC_NOT_FOOD = "Not food";
     private static final String ORDER_DESC_PIZZA = "Pizza";
-    public static final int LONG_DISTANCE_IN_KILOMETERS = 5;
+    private static final int LONG_DISTANCE_IN_KILOMETERS = 5;
 
     @Mock
     private OrderRepository orderRepository;
@@ -53,7 +54,13 @@ class OrdersFetcherServiceTest {
         Mockito.when(ordersFetcherProperties.getLongDistanceVehicles()).thenReturn(Arrays.asList(Vehicle.MOTORCYCLE, Vehicle.ELECTRIC_SCOOTER));
     }
 
+    //Note: D,V,F Stands for Distance, VIP, Food.
+
     @Test
+    @DisplayName
+            ("Given a courier equipped with a box and a bicycle which happens to be close to all the orders." +
+                    "When the courier fetches orders," +
+                    "Then the courier should be able to see all the orders ordered as D,V,F.")
     void fetchOrdersForCourier_CloseToOrder_WithABox_AndShortDistanceVehicle() {
         final Location courierLocation = new Location(LAT, LON);
         final Location orderLocation = new Location(LAT_CLOSE, LON);
@@ -62,8 +69,7 @@ class OrdersFetcherServiceTest {
                 .withVehicle(Vehicle.BICYCLE)
                 .withLocation(courierLocation);
 
-        final List<Order> mockList = getMockOrdersList(orderLocation);
-        Mockito.when(orderRepository.findAll()).thenReturn(mockList);
+        Mockito.when(orderRepository.findAll()).thenReturn(getMockOrdersList(orderLocation));
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
         Mockito.when(ordersFetcherProperties.getLongDistanceInKilometers()).thenReturn(LONG_DISTANCE_IN_KILOMETERS);
@@ -77,6 +83,10 @@ class OrdersFetcherServiceTest {
     }
 
     @Test
+    @DisplayName
+            ("Given a courier equipped with a box and a bicycle which happens to be far from all the orders." +
+                    "When the courier fetches orders," +
+                    "Then the courier will not get anything.")
     void fetchOrdersForCourier_FarFromOrder_WithABox_AndShortDistanceVehicle() {
         final Location courierLocation = new Location(LAT, LON);
         final Location orderLocation = new Location(LAT_FAR, LON);
@@ -85,9 +95,8 @@ class OrdersFetcherServiceTest {
                 .withVehicle(Vehicle.BICYCLE)
                 .withLocation(courierLocation);
 
-        final List<Order> mockList = getMockOrdersList(orderLocation);
         Mockito.when(ordersFetcherProperties.getLongDistanceInKilometers()).thenReturn(LONG_DISTANCE_IN_KILOMETERS);
-        Mockito.when(orderRepository.findAll()).thenReturn(mockList);
+        Mockito.when(orderRepository.findAll()).thenReturn(getMockOrdersList(orderLocation));
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
 
@@ -97,6 +106,10 @@ class OrdersFetcherServiceTest {
     }
 
     @Test
+    @DisplayName
+            ("Given a courier equipped with a box and a motorcycle which happens to be far from all the orders." +
+                    "When the courier fetches orders," +
+                    "Then the courier should be able to see all the orders ordered as D,V,F.")
     void fetchOrdersForCourier_FarFromOrder_WithABox_AndLongDistanceVehicle() {
         final Location courierLocation = new Location(LAT, LON);
         final Location orderLocation = new Location(LAT_FAR, LON);
@@ -105,8 +118,7 @@ class OrdersFetcherServiceTest {
                 .withVehicle(Vehicle.MOTORCYCLE)
                 .withLocation(courierLocation);
 
-        final List<Order> mockList = getMockOrdersList(orderLocation);
-        Mockito.when(orderRepository.findAll()).thenReturn(mockList);
+        Mockito.when(orderRepository.findAll()).thenReturn(getMockOrdersList(orderLocation));
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
         final List<Order> orders = ordersFetcherService.fetchOrders(courier);
@@ -119,6 +131,10 @@ class OrdersFetcherServiceTest {
     }
 
     @Test
+    @DisplayName
+            ("Given a courier who's not equipped with a box and is riding a bicycle which happens to be close to all the orders." +
+                    "When the courier fetches orders," +
+                    "Then the courier should be able to see all the orders ordered as D,V,F. except the ones which considered to be food.")
     void fetchOrdersForCourier_CloseToOrder_WithoutABox_AndShortDistanceVehicle() {
         final Location courierLocation = new Location(LAT, LON);
         final Location orderLocation = new Location(LAT, LON);
@@ -127,8 +143,7 @@ class OrdersFetcherServiceTest {
                 .withVehicle(Vehicle.BICYCLE)
                 .withLocation(courierLocation);
 
-        final List<Order> mockList = getMockOrdersList(orderLocation);
-        Mockito.when(orderRepository.findAll()).thenReturn(mockList);
+        Mockito.when(orderRepository.findAll()).thenReturn(getMockOrdersList(orderLocation));
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
         final List<Order> orders = ordersFetcherService.fetchOrders(courier);
@@ -140,6 +155,10 @@ class OrdersFetcherServiceTest {
     }
 
     @Test
+    @DisplayName
+            ("Given a courier who's not equipped with a box and is riding a bicycle which happens to be far from all the orders." +
+                    "When the courier fetches orders," +
+                    "Then the courier should not be able to see any order.")
     void fetchOrdersForCourier_FarFromOrder_WithoutABox_AndShortDistanceVehicle() {
         final Location courierLocation = new Location(LAT, LON);
         final Location orderLocation = new Location(LAT_FAR, LON);
@@ -148,9 +167,8 @@ class OrdersFetcherServiceTest {
                 .withVehicle(Vehicle.BICYCLE)
                 .withLocation(courierLocation);
 
-        final List<Order> mockList = getMockOrdersList(orderLocation);
         Mockito.when(ordersFetcherProperties.getLongDistanceInKilometers()).thenReturn(LONG_DISTANCE_IN_KILOMETERS);
-        Mockito.when(orderRepository.findAll()).thenReturn(mockList);
+        Mockito.when(orderRepository.findAll()).thenReturn(getMockOrdersList(orderLocation));
         ordersFetcherService = new OrdersFetcherService(ordersFetcherProperties, orderRepository);
 
         final List<Order> orders = ordersFetcherService.fetchOrders(courier);
@@ -159,6 +177,10 @@ class OrdersFetcherServiceTest {
     }
 
     @Test
+    @DisplayName
+            ("Given a courier who's not equipped with a box and is riding a motorcycle which happens to be far from all the orders." +
+                    "When the courier fetches orders," +
+                    "Then the courier should be able to see all the orders ordered as D,V,F. except the ones which considered to be food.")
     void fetchOrdersForCourier_FarFromOrder_WithoutABox_AndLongDistanceVehicle() {
         final Location courierLocation = new Location(LAT, LON);
         final Location orderLocation = new Location(LAT_FAR, LON);

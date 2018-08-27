@@ -14,12 +14,12 @@ import java.util.Comparator;
  *
  * @author Moath
  */
-public class DistanceComparator implements Comparator<Order> {
+class DistanceComparator implements Comparator<Order> {
 
     private int distanceSlotInMeters;
     private Location location;
 
-    public DistanceComparator(int distanceSlotInMeters, Location location) {
+    DistanceComparator(int distanceSlotInMeters, Location location) {
         if (distanceSlotInMeters < 0) {
             throw new IllegalArgumentException("distanceSlotInMeters is negative!");
         }
@@ -59,6 +59,5 @@ public class DistanceComparator implements Comparator<Order> {
 
         return -1;
     }
-
 
 }

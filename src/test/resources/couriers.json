@@ -8,5 +8,15 @@
       "lat": 41.3965463,
       "lon": 2.1963997
     }
+  },
+  {
+    "box": false,
+    "vehicle": "MOTORCYCLE",
+    "location": {
+      "lat": 41.40638606893252,
+      "lon": 2.171794089603749
+    },
+    "id": "courier-4ab4ce03951c",
+    "name": "Daron Reinhold"
   }
 ]

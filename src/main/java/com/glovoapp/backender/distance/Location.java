@@ -3,8 +3,8 @@ package com.glovoapp.backender.distance;
 import java.util.Objects;
 
 public class Location {
-    private Double lat;
-    private Double lon;
+    private final Double lat;
+    private final Double lon;
 
     public Location(Double lat, Double lon) {
         this.lat = lat;

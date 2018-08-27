@@ -3,9 +3,7 @@ package com.glovoapp.backender.order.priority;
 import com.glovoapp.backender.distance.Location;
 import com.glovoapp.backender.order.model.Order;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * This is used to return a list of comparators (priority strategy) based on the passed list.
@@ -15,40 +13,36 @@ import java.util.List;
  */
 public class OrdersPriorityStrategy {
 
-    private int distanceSlotInMeters;
-    private Location location;
-    private List<OrdersPriority> ordersPriorities;
+    private final int distanceSlotInMeters;
+    private final Map<OrdersPriority, Comparator<Order>> comparatorsMap;
 
-    public List<Comparator<Order>> getComparators() {
-        List<Comparator<Order>> comparators = new ArrayList<>();
+    public OrdersPriorityStrategy(List<OrdersPriority> ordersPriorities, int distanceSlotInMeters) {
+        this.distanceSlotInMeters = distanceSlotInMeters;
+        comparatorsMap = new LinkedHashMap<>(ordersPriorities.size());
+
         ordersPriorities.forEach(ordersPriority -> {
             switch (ordersPriority) {
                 case FOOD:
-                    comparators.add(new FoodComparator());
+                    comparatorsMap.put(ordersPriority, new FoodComparator());
                     break;
 
                 case VIP:
-                    comparators.add(new VIPComparator());
+                    comparatorsMap.put(ordersPriority, new VIPComparator());
                     break;
 
                 case DISTANCE:
-                    comparators.add(new DistanceComparator(distanceSlotInMeters, location));
+                    comparatorsMap.put(ordersPriority, null);
                     break;
             }
         });
-
-        return comparators;
     }
 
-    public void setOrdersPriorities(List<OrdersPriority> ordersPriorities) {
-        this.ordersPriorities = ordersPriorities;
-    }
-
-    public void setDistanceSlotInMeters(int distanceSlotInMeters) {
-        this.distanceSlotInMeters = distanceSlotInMeters;
+    public List<Comparator<Order>> getComparators() {
+        return new ArrayList<>(comparatorsMap.values());
     }
 
     public void setLocation(Location location) {
-        this.location = location;
+        comparatorsMap.put(OrdersPriority.DISTANCE, new DistanceComparator(distanceSlotInMeters, location));
     }
+
 }

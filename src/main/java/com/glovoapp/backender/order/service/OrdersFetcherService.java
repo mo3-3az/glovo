@@ -36,10 +36,7 @@ public class OrdersFetcherService implements OrdersFetcher {
         this.properties = properties;
         this.orderRepository = orderRepository;
 
-        ordersPriorityStrategy = new OrdersPriorityStrategy();
-        ordersPriorityStrategy.setDistanceSlotInMeters(properties.getDistanceSlotInMeters());
-        ordersPriorityStrategy.setOrdersPriorities(properties.getOrdersPriorities());
-
+        ordersPriorityStrategy = new OrdersPriorityStrategy(properties.getOrdersPriorities(), properties.getDistanceSlotInMeters());
         initialize();
     }
 
@@ -59,8 +56,15 @@ public class OrdersFetcherService implements OrdersFetcher {
 
     @Override
     public List<Order> fetchOrders(Courier courier) {
-        List<Order> orders = new ArrayList<>();
+        ordersPriorityStrategy.setLocation(courier.getLocation());
+        final OrdersComparator comparator = new OrdersComparator(ordersPriorityStrategy.getComparators());
+        if (canDeliverAny(courier)) {
+            final List<Order> all = orderRepository.findAll();
+            all.sort(comparator);
+            return all;
+        }
 
+        List<Order> orders = new ArrayList<>();
         noneFoodOrders
                 .stream()
                 .filter(order -> canCourierPickUp(courier, order.getPickup()))
@@ -73,20 +77,27 @@ public class OrdersFetcherService implements OrdersFetcher {
                     .forEach(orders::add);
         }
 
-        ordersPriorityStrategy.setLocation(courier.getLocation());
-        orders.sort(new OrdersComparator(ordersPriorityStrategy.getComparators()));
+        orders.sort(comparator);
 
         return orders;
     }
 
+    private boolean canDeliverAny(Courier courier) {
+        return courier.canDeliverFood() && hasLongDistanceVehicle(courier);
+    }
+
     private boolean canCourierPickUp(Courier courier, Location pickupLocation) {
         //Does the courier has a vehicle that can go far.
-        if (properties.getLongDistanceVehicles().contains(courier.getVehicle())) {
+        if (hasLongDistanceVehicle(courier)) {
             return true;
         }
 
         //Is the courier close to the order.
         return DistanceCalculator.calculateDistanceKilometers(pickupLocation, courier.getLocation()) <= properties.getLongDistanceInKilometers();
+    }
+
+    private boolean hasLongDistanceVehicle(Courier courier) {
+        return properties.getLongDistanceVehicles().contains(courier.getVehicle());
     }
 
 }

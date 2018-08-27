@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @Controller
 @ComponentScan("com.glovoapp.backender")
 @EnableAutoConfiguration
+@SpringBootApplication
 class API {
     private final String welcomeMessage;
 
@@ -30,7 +32,7 @@ class API {
     private final OrdersFetcher ordersFetcher;
 
     @Autowired
-    API(
+    public API(
             @Value("${backender.welcome_message}") String welcomeMessage,
             OrderRepository orderRepository,
             CourierRepository courierRepository,
@@ -43,13 +45,13 @@ class API {
 
     @RequestMapping("/")
     @ResponseBody
-    String root() {
+    public String root() {
         return welcomeMessage;
     }
 
     @RequestMapping("/orders")
     @ResponseBody
-    List<OrderVM> orders() {
+    public List<OrderVM> orders() {
         return orderRepository.findAll()
                 .stream()
                 .map(order -> new OrderVM(order.getId(), order.getDescription()))
@@ -58,7 +60,7 @@ class API {
 
     @RequestMapping("/orders/{courierId:^courier-[0-9A-Fa-f]+$}")
     @ResponseBody
-    List<OrderVM> ordersByCourierId(@PathVariable String courierId) {
+    public List<OrderVM> ordersByCourierId(@PathVariable String courierId) {
         final Courier courier = courierRepository.findById(courierId);
         if (courier == null) {
             return Collections.emptyList();

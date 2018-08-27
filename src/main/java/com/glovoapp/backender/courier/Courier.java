@@ -19,7 +19,7 @@ public class Courier {
         return name;
     }
 
-    public Boolean getBox() {
+    private Boolean getBox() {
         return box;
     }
 
@@ -31,12 +31,12 @@ public class Courier {
         return location;
     }
 
-    public Courier withId(String id) {
+    Courier withId(String id) {
         this.id = id;
         return this;
     }
 
-    public Courier withName(String name) {
+    Courier withName(String name) {
         this.name = name;
         return this;
     }

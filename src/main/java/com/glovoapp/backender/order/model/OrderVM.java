@@ -4,8 +4,8 @@ package com.glovoapp.backender.order.model;
  * To be used for exposing order information through the API
  */
 public class OrderVM {
-    private String id;
-    private String description;
+    private final String id;
+    private final String description;
 
     public OrderVM(String id, String description) {
         this.id = id;

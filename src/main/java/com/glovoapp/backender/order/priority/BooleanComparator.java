@@ -9,7 +9,7 @@ import java.util.Comparator;
  *
  * @author Moath
  */
-public abstract class BooleanComparator implements Comparator<Order> {
+abstract class BooleanComparator implements Comparator<Order> {
 
     @Override
     public abstract int compare(Order order1, Order order2);
