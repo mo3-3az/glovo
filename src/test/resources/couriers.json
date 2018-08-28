@@ -18,5 +18,15 @@
     },
     "id": "courier-4ab4ce03951c",
     "name": "Daron Reinhold"
+  },
+  {
+    "box": true,
+    "vehicle": "BICYCLE",
+    "location": {
+      "lat": 41.38128389875409,
+      "lon": 2.1844937085427016
+    },
+    "id": "courier-31c0b957f89b",
+    "name": "Nicolasa Frizell"
   }
 ]

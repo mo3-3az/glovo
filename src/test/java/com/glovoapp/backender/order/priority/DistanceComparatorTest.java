@@ -16,7 +16,7 @@ class DistanceComparatorTest {
 
     @BeforeEach
     void setUp() {
-        distanceComparator = new DistanceComparator(1000, Location.get(10.0, 1.0));
+        distanceComparator = new DistanceComparator(1000, Location.get(41.0, 2.101));
     }
 
     @Test
@@ -32,10 +32,10 @@ class DistanceComparatorTest {
     @Test
     void sortOrdersWithinSameDistanceSlot() {
         final List<Order> ordersOriginal = Arrays.asList(
-                new Order().withPickup(Location.get(10.0, 1.0)),
-                new Order().withPickup(Location.get(10.0, 1.0)),
-                new Order().withPickup(Location.get(10.0, 1.0)),
-                new Order().withPickup(Location.get(10.0, 1.0))
+                new Order().withPickup(Location.get(41.0, 2.101)),
+                new Order().withPickup(Location.get(41.0, 2.101)),
+                new Order().withPickup(Location.get(41.0, 2.101)),
+                new Order().withPickup(Location.get(41.0, 2.101))
         );
 
         final List<Order> ordersCopy = new ArrayList<>(ordersOriginal);
@@ -46,17 +46,17 @@ class DistanceComparatorTest {
     @Test
     void sortOrdersSomeWithinSameDistanceSlotSomeFurther() {
         final List<Order> ordersOriginal = Arrays.asList(
-                new Order().withPickup(Location.get(10.0, 1.0)),
-                new Order().withPickup(Location.get(110.0, 1.0)),
-                new Order().withPickup(Location.get(100.0, 1.0)),
-                new Order().withPickup(Location.get(10.0, 1.0))
+                new Order().withPickup(Location.get(41.0, 2.101)),
+                new Order().withPickup(Location.get(51.0, 2.101)),
+                new Order().withPickup(Location.get(51.0, 2.101)),
+                new Order().withPickup(Location.get(41.0, 2.101))
         );
 
         final List<Order> ordersSorted = Arrays.asList(
-                new Order().withPickup(Location.get(10.0, 1.0)),
-                new Order().withPickup(Location.get(10.0, 1.0)),
-                new Order().withPickup(Location.get(100.0, 1.0)),
-                new Order().withPickup(Location.get(110.0, 1.0))
+                new Order().withPickup(Location.get(41.0, 2.101)),
+                new Order().withPickup(Location.get(41.0, 2.101)),
+                new Order().withPickup(Location.get(51.0, 2.101)),
+                new Order().withPickup(Location.get(51.0, 2.101))
         );
 
         ordersOriginal.sort(distanceComparator);
@@ -65,19 +65,19 @@ class DistanceComparatorTest {
 
     @Test
     void sortOrdersFarFromEachOther() {
-        DistanceComparator distanceComparator = new DistanceComparator(1000, Location.get(10.0, 1.0));
+        DistanceComparator distanceComparator = new DistanceComparator(1000, Location.get(40.0, 2.101));
         final List<Order> ordersOriginal = Arrays.asList(
-                new Order().withPickup(Location.get(5000.0, 1.0)),
-                new Order().withPickup(Location.get(1000.0, 1.0)),
-                new Order().withPickup(Location.get(500.0, 1.0)),
-                new Order().withPickup(Location.get(100.0, 1.0))
+                new Order().withPickup(Location.get(55.0, 2.101)),
+                new Order().withPickup(Location.get(50.0, 2.101)),
+                new Order().withPickup(Location.get(45.0, 2.101)),
+                new Order().withPickup(Location.get(40.0, 2.101))
         );
 
         final List<Order> ordersSorted = Arrays.asList(
-                new Order().withPickup(Location.get(100.0, 1.0)),
-                new Order().withPickup(Location.get(500.0, 1.0)),
-                new Order().withPickup(Location.get(1000.0, 1.0)),
-                new Order().withPickup(Location.get(5000.0, 1.0))
+                new Order().withPickup(Location.get(40.0, 2.101)),
+                new Order().withPickup(Location.get(45.0, 2.101)),
+                new Order().withPickup(Location.get(50.0, 2.101)),
+                new Order().withPickup(Location.get(55.0, 2.101))
         );
 
         ordersOriginal.sort(distanceComparator);
@@ -86,19 +86,19 @@ class DistanceComparatorTest {
 
     @Test
     void sortOrdersWithinSameLongDistanceSlot() {
-        DistanceComparator distanceComparator = new DistanceComparator(100000, Location.get(1.0, 1.0));
+        DistanceComparator distanceComparator = new DistanceComparator(100000, Location.get(41.0, 2.101));
         final List<Order> ordersOriginal = Arrays.asList(
-                new Order().withPickup(Location.get(1.1, 1.0)),
-                new Order().withPickup(Location.get(1.2, 1.0)),
-                new Order().withPickup(Location.get(1.3, 1.0)),
-                new Order().withPickup(Location.get(1.4, 1.0))
+                new Order().withPickup(Location.get(41.10000000001, 2.101)),
+                new Order().withPickup(Location.get(41.10000000002, 2.101)),
+                new Order().withPickup(Location.get(41.10000000003, 2.101)),
+                new Order().withPickup(Location.get(41.10000000004, 2.101))
         );
 
         final List<Order> ordersSorted = Arrays.asList(
-                new Order().withPickup(Location.get(1.1, 1.0)),
-                new Order().withPickup(Location.get(1.2, 1.0)),
-                new Order().withPickup(Location.get(1.3, 1.0)),
-                new Order().withPickup(Location.get(1.4, 1.0))
+                new Order().withPickup(Location.get(41.10000000001, 2.101)),
+                new Order().withPickup(Location.get(41.10000000002, 2.101)),
+                new Order().withPickup(Location.get(41.10000000003, 2.101)),
+                new Order().withPickup(Location.get(41.10000000004, 2.101))
         );
 
         ordersOriginal.sort(distanceComparator);
@@ -108,7 +108,7 @@ class DistanceComparatorTest {
     @Test
     void sortNullOrders() {
         final List<Order> ordersOriginal = Arrays.asList(
-                null, new Order().withPickup(Location.get(1.4, 1.0)), null
+                null, new Order().withPickup(Location.get(41.4, 2.101)), null
         );
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> ordersOriginal.sort(distanceComparator));

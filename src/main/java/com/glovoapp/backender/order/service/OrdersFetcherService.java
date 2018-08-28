@@ -47,7 +47,7 @@ public class OrdersFetcherService implements OrdersFetcher {
         final List<FoodKeyword> foodKeywords = properties.getFoodKeywords();
         orderRepository.findAll().forEach(order -> {
             if (FoodKeyword.isFoodOrder(order.getDescription(), foodKeywords)) {
-                this.foodOrders.add(order);
+                foodOrders.add(order);
             } else {
                 noneFoodOrders.add(order);
             }

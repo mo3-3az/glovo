@@ -3,6 +3,8 @@ package com.glovoapp.backender;
 import com.glovoapp.backender.courier.Courier;
 import com.glovoapp.backender.courier.CourierRepository;
 import com.glovoapp.backender.courier.Vehicle;
+import com.glovoapp.backender.distance.DistanceCalculator;
+import com.glovoapp.backender.distance.Location;
 import com.glovoapp.backender.order.config.OrdersFetcherProperties;
 import com.glovoapp.backender.order.model.FoodKeyword;
 import com.glovoapp.backender.order.service.OrderRepository;
@@ -12,9 +14,9 @@ import com.google.gson.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -57,9 +59,6 @@ public class APITest {
         Assertions.assertNotNull(mvc);
     }
 
-    @Value("${backender.welcome_message}")
-    String welcomeMessage;
-
     @Test
     public void root() throws Exception {
         mvc.perform(get("/")).andDo(print()).andExpect(status().isOk());
@@ -77,6 +76,10 @@ public class APITest {
 
 
     @Test
+    @DisplayName(
+            "Given a courier without a box." +
+                    "When the courier is fetching orders." +
+                    "Then only orders that are not described as food should return.")
     public void ordersByCourierIdWithoutABox() throws Exception {
         final Optional<Courier> courierWithoutABox = courierRepository.findAll().stream().filter(courier -> !courier.canDeliverFood()).findFirst();
         if (!courierWithoutABox.isPresent()) {
@@ -96,6 +99,10 @@ public class APITest {
     }
 
     @Test
+    @DisplayName(
+            "Given a courier with a box and a motorcycle." +
+                    "When the courier is fetching orders." +
+                    "Then all the orders should return.")
     public void ordersByCourierIdWithABoxAndAMotorcycle() throws Exception {
         final Optional<Courier> courierWithABoxAndAMotorcycle = courierRepository.findAll().stream()
                 .filter(courier -> courier.canDeliverFood() && Vehicle.MOTORCYCLE.equals(courier.getVehicle())).findFirst();
@@ -109,6 +116,35 @@ public class APITest {
                     , "A courier with a box and a motorcycle can deliver any order!");
         });
     }
+
+    @Test
+    @DisplayName(
+            "Given a courier with a box and a bicycle." +
+                    "When the courier is fetching orders." +
+                    "Then only orders that are within 5 kilometers should return.")
+    public void ordersByCourierIdWithABoxAndABicycle() throws Exception {
+        final Optional<Courier> courierWithABoxAndABicycle = courierRepository.findAll().stream()
+                .filter(courier -> courier.canDeliverFood() && Vehicle.BICYCLE.equals(courier.getVehicle())).findFirst();
+        Assertions.assertTrue(courierWithABoxAndABicycle.isPresent(), "Cannot find a courier with a box and a motorcycle!");
+
+        mvc.perform(get("/orders/" + courierWithABoxAndABicycle.get().getId()))
+                .andDo(print())
+                .andExpect(status().isOk()).andDo(result -> {
+            final JsonArray ordersAsJsonArray = new JsonParser().parse(result.getResponse().getContentAsString()).getAsJsonArray();
+            final int longDistanceInKilometers = ordersFetcherProperties.getLongDistanceInKilometers();
+            ordersAsJsonArray.forEach(jsonElement -> {
+                final String orderId = jsonElement.getAsJsonObject().get("id").getAsString();
+                final Location pickup = orderRepository
+                        .findAll()
+                        .stream()
+                        .filter(order -> order.getId().equals(orderId)).findFirst().get().getPickup();
+                final double distance = DistanceCalculator.calculateDistanceKilometers(pickup, courierWithABoxAndABicycle.get().getLocation());
+                Assertions.assertTrue(distance <= longDistanceInKilometers
+                        , "Order shouldn't be futher than " + longDistanceInKilometers + " kilometers, since the courier is riding a bicycle!");
+            });
+        });
+    }
+
 
     @Test
     public void ordersByInvalidCourierId() throws Exception {
